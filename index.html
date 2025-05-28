@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Evexa Universal Converter</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Roboto:wght@400;500;700&family=Open+Sans:wght@400;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.14.0/Sortable.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.worker.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+
+
+   
+</head>
+<body class="antialiased">
+    <div class="container">
+        <header class="text-center mb-8 flex flex-col items-center">
+            <h1 class="text-5xl font-extrabold text-white mb-4">EVE<span class="text-violet-400">X</span>A Converter</h1>
+            <nav class="flex space-x-4 mb-8">
+                <button class="tab-button" data-tab="image-to-pdf-section">Image to PDF</button>
+                <button class="tab-button" data-tab="pdf-to-image-section">PDF to Image</button>
+                <button class="tab-button" data-tab="text-to-pdf-section">Text to PDF</button>
+                <button class="tab-button active" data-tab="resume-builder-section">Resume Builder</button>
+            </nav>
+        </header>
+
+        <div id="image-to-pdf-section" class="tab-content hidden">
+            <div class="card">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-3xl font-bold">Image to PDF Converter</h2>
+                    <button id="clear-img-pdf-btn" class="btn-clear hidden">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                        Clear All
+                    </button>
+                </div>
+                <div id="drop-area" class="drop-area text-gray-400">
+                    <input type="file" id="image-input" accept="image/jpeg, image/png, image/webp, image/gif, image/bmp" multiple class="hidden">
+                    <p class="text-lg font-semibold mb-2">Drag & Drop Images Here</p>
+                    <p class="mb-4">or</p>
+                    <button onclick="document.getElementById('image-input').click()" class="btn-primary">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
+                        Select Images
+                    </button>
+                </div>
+
+                <div id="loading-message-img-pdf" class="message-box info hidden">
+                    <p>Processing images...</p>
+                </div>
+                <div id="status-message-img-pdf" class="message-box hidden"></div>
+
+                <div id="image-previews-container" class="mt-8 hidden">
+                    <h3 class="text-xl font-semibold mb-3 text-gray-300">Arrange Images (Drag & Drop)</h3>
+                    <div id="image-previews" class="image-preview-grid">
+                        </div>
+                </div>
+
+                <div class="mt-8 p-4 border border-gray-700 rounded-md bg-gray-800">
+                    <h3 class="text-xl font-semibold mb-3 text-gray-300">PDF Output Options</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                        <div>
+                            <label for="pdf-page-size" class="block text-gray-400 font-medium mb-1 text-left">Page Size:</label>
+                            <select id="pdf-page-size" class="form-input">
+                                <option value="a4">A4 (210 x 297 mm)</option>
+                                <option value="letter">Letter (216 x 279 mm)</option>
+                                <option value="legal">Legal (216 x 356 mm)</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="pdf-orientation" class="block text-gray-400 font-medium mb-1 text-left">Orientation:</label>
+                            <select id="pdf-orientation" class="form-input">
+                                <option value="p">Portrait</option>
+                                <option value="l">Landscape</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="mb-4">
+                        <h4 class="text-md font-semibold mb-2 text-gray-300 text-left">Margins (mm):</h4>
+                        <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                            <div>
+                                <label for="margin-top" class="block text-gray-400 text-sm mb-1">Top:</label>
+                                <input type="number" id="margin-top" value="10" min="0" class="form-input">
+                            </div>
+                            <div>
+                                <label for="margin-right" class="block text-gray-400 text-sm mb-1">Right:</label>
+                                <input type="number" id="margin-right" value="10" min="0" class="form-input">
+                            </div>
+                            <div>
+                                <label for="margin-bottom" class="block text-gray-400 text-sm mb-1">Bottom:</label>
+                                <input type="number" id="margin-bottom" value="10" min="0" class="form-input">
+                            </div>
+                            <div>
+                                <label for="margin-left" class="block text-gray-400 text-sm mb-1">Left:</label>
+                                <input type="number" id="margin-left" value="10" min="0" class="form-input">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <button id="convert-btn-img-pdf" class="btn-primary mt-8 hidden" disabled>
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg>
+                    Convert to PDF
+                </button>
+
+                <a id="download-link-img-pdf" class="link-download hidden" download="converted_images.pdf">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l3-3m-3 3l-3-3m2-8h7a2 2 0 012 2v8a2 2 0 01-2 2h-7l-3 3v-3H4a2 2 0 01-2-2V6a2 2 0 012-2h7a2 2 0 012 2z"></path></svg>
+                    Download PDF
+                </a>
+            </div>
+        </div>
+
+        <div id="pdf-to-image-section" class="tab-content hidden">
+            <div class="card">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-3xl font-bold">PDF to Image Converter</h2>
+                    <button id="clear-pdf-img-btn" class="btn-clear hidden">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                        Clear All
+                    </button>
+                </div>
+                <p class="text-gray-400 mb-6">Upload a PDF and convert each page into an image (JPG or PNG).</p>
+
+                <input type="file" id="pdf-input" accept="application/pdf" class="hidden">
+
+                <div id="pdf-drop-area" class="pdf-drop-area text-gray-400">
+                    <svg class="w-10 h-10 mb-2 text-primary-color" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path></svg>
+                    <p class="text-lg font-semibold mb-1">Drag & Drop PDF Here</p>
+                    <p class="mb-2">or</p>
+                    <button type="button" onclick="document.getElementById('pdf-input').click()" class="btn-primary px-6 py-2 text-base">
+                        Select PDF
+                    </button>
+                    <span id="selected-pdf-name" class="selected-file-name mt-2">No file chosen</span>
+                </div>
+
+                <div class="flex flex-col sm:flex-row sm:space-x-4 mb-4">
+                    <div class="flex-1 mb-4 sm:mb-0">
+                        <label for="output-format" class="block text-gray-300 text-left text-sm font-semibold mb-1">Output Format:</label>
+                        <select id="output-format" class="form-input">
+                            <option value="jpeg">JPG</option>
+                            <option value="png">PNG</option>
+                        </select>
+                    </div>
+                    <div class="flex-1">
+                        <label for="resolution-scale" class="block text-gray-300 text-left text-sm font-semibold mb-1">Download Quality:</label>
+                        <select id="resolution-scale" class="form-input">
+                            <option value="1.5">Normal Quality</option>
+                            <option value="2">Standard Quality</option>
+                            <option value="4">High Quality</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="flex flex-col sm:flex-row sm:space-x-4 mb-6">
+                    <div class="flex-1 mb-4 sm:mb-0">
+                        <label for="page-start" class="block text-gray-300 text-left text-sm font-semibold mb-1">Start Page (optional):</label>
+                        <input type="number" id="page-start" min="1" placeholder="e.g., 1" class="form-input">
+                    </div>
+                    <div class="flex-1">
+                        <label for="page-end" class="block text-gray-300 text-left text-sm font-semibold mb-1">End Page (optional):</label>
+                        <input type="number" id="page-end" min="1" placeholder="e.g., 5" class="form-input">
+                    </div>
+                </div>
+
+                <button id="convert-pdf-to-img-btn" class="btn-primary w-full" disabled>
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg>
+                    Convert PDF to Images
+                </button>
+
+                <div id="loading-message-pdf-img" class="message-box info hidden">
+                    <p>Converting PDF...</p>
+                </div>
+                <div id="status-message-pdf-img" class="message-box hidden"></div>
+
+                <div id="pdf-image-output" class="mt-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 hidden">
+                    </div>
+
+                <button id="download-all-images-btn" class="btn-primary w-full mt-8 hidden">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                    Download All Images as ZIP
+                </button>
+            </div>
+        </div>
+
+        <div id="text-to-pdf-section" class="tab-content hidden">
+            <div class="card">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-3xl font-bold">Text to PDF Converter</h2>
+                    <button id="clear-text-pdf-btn" class="btn-clear hidden">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                        Clear All
+                    </button>
+                </div>
+                <p class="text-gray-400 mb-6">Type or paste your text below to convert it into a PDF document.</p>
+
+                <div class="mb-4">
+                    <label for="text-to-pdf-input" class="block text-gray-300 text-left text-sm font-semibold mb-1">Enter your text:</label>
+                    <textarea id="text-to-pdf-input" class="form-input form-textarea" rows="10" placeholder="Start typing or paste your text here..."></textarea>
+                </div>
+
+                <button id="convert-text-to-pdf-btn" class="btn-primary w-full">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 13h6m-3-3v6m5 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                    Convert Text to PDF
+                </button>
+
+                <div id="loading-message-text-pdf" class="message-box info hidden mt-4">
+                    <p>Generating PDF from text...</p>
+                </div>
+                <div id="status-message-text-pdf" class="message-box hidden"></div>
+
+                <a id="download-text-pdf-link" class="link-download hidden" download="converted_text.pdf">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l3-3m-3 3l-3-3m2-8h7a2 2 0 012 2v8a2 2 0 01-2 2h-7l-3 3v-3H4a2 2 0 01-2-2V6a2 2 0 012-2h7a2 2 0 012 2z"></path></svg>
+                    Download Text PDF
+                </a>
+            </div>
+        </div>
+
+        <div id="resume-builder-section" class="tab-content">
+            <div class="card">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-3xl font-bold">Resume Builder</h2>
+                    <button id="clear-resume-btn" class="btn-clear hidden">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                        Clear All
+                    </button>
+                </div>
+
+                <div class="mb-8">
+                    <h3 class="text-xl font-semibold mb-3 text-gray-300">Choose a Template</h3>
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4" id="template-selection">
+                        <button class="template-card active" data-template="modern">Modern</button>
+                        <button class="template-card" data-template="classic">Classic</button>
+                        <button class="template-card" data-template="minimal">Minimal</button>
+                    </div>
+                </div>
+
+                <div class="mb-8 p-4 border border-gray-700 rounded-md bg-gray-800">
+                    <h3 class="text-xl font-semibold mb-3 text-gray-300">Customize Your Resume</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                        <div>
+                            <label for="font-select" class="block text-gray-400 font-medium mb-1 text-left">Font Family:</label>
+                            <select id="font-select" class="form-input">
+                                <option value="Inter">Inter</option>
+                                <option value="Roboto">Roboto</option>
+                                <option value="Open Sans">Open Sans</option>
+                                <option value="Playfair Display">Playfair Display (Serif)</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="primary-color" class="block text-gray-400 font-medium mb-1 text-left">Primary Color:</label>
+                            <input type="color" id="primary-color" value="#6366f1" class="w-full h-10 rounded-md border-gray-700">
+                        </div>
+                    </div>
+                    <div class="mb-4">
+                        <h4 class="text-md font-semibold mb-2 text-gray-300 text-left">List Styles:</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label for="bullet-type" class="block text-gray-400 font-medium mb-1 text-left">Bullet Type:</label>
+                                <select id="bullet-type" class="form-input">
+                                    <option value="disc">Disc (Default)</option>
+                                    <option value="circle">Circle</option>
+                                    <option value="square">Square</option>
+                                    <option value="none">None</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label for="list-line-height" class="block text-gray-400 font-medium mb-1 text-left">List Line Spacing:</label>
+                                <input type="range" id="list-line-height" min="1.0" max="2.0" step="0.1" value="1.5" class="w-full h-10">
+                                <span id="list-line-height-value" class="text-gray-400 text-sm mt-1 block text-right">1.5x</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mb-4">
+                        <h4 class="text-md font-semibold mb-2 text-gray-300 text-left">Section Order (Drag & Drop):</h4>
+                        <ul id="section-order-list" class="bg-gray-900 border border-gray-700 rounded-md p-3 text-left">
+                            </ul>
+                    </div>
+                </div>
+
+                <div class="text-left">
+                    <h3 class="text-xl font-semibold mb-3 text-gray-300">Enter Your Details</h3>
+
+                    <div class="mb-6 p-4 border border-gray-700 rounded-md bg-gray-800">
+                        <h4 class="text-lg font-semibold text-gray-300 mb-3">Personal Information</h4>
+                        <input type="text" id="name-input" placeholder="Your Name" class="form-input mb-2">
+                        <input type="text" id="title-input" placeholder="Professional Title" class="form-input mb-2">
+                        <input type="email" id="email-input" placeholder="Email" class="form-input mb-2">
+                        <input type="tel" id="phone-input" placeholder="Phone" class="form-input mb-2">
+                        <input type="text" id="linkedin-input" placeholder="LinkedIn Profile URL" class="form-input mb-2">
+                        <input type="text" id="website-input" placeholder="Personal Website URL" class="form-input">
+                    </div>
+
+                    <div class="mb-6 p-4 border border-gray-700 rounded-md bg-gray-800">
+                        <h4 class="text-lg font-semibold text-gray-300 mb-3">Summary / About Me</h4>
+                        <textarea id="summary-input" rows="4" placeholder="A brief summary of your skills and experience..." class="form-input"></textarea>
+                    </div>
+
+                    <div class="mb-6 p-4 border border-gray-700 rounded-md bg-gray-800">
+                        <h4 class="text-lg font-semibold text-gray-300 mb-3 flex justify-between items-center">
+                            Work Experience
+                            <button id="add-experience-btn" class="text-indigo-400 hover:text-indigo-300 font-semibold text-sm">+ Add</button>
+                        </h4>
+                        <div id="experience-entries" class="space-y-4">
+                            </div>
+                    </div>
+
+                    <div class="mb-6 p-4 border border-gray-700 rounded-md bg-gray-800">
+                        <h4 class="text-lg font-semibold text-gray-300 mb-3 flex justify-between items-center">
+                            Education
+                            <button id="add-education-btn" class="text-indigo-400 hover:text-indigo-300 font-semibold text-sm">+ Add</button>
+                        </h4>
+                        <div id="education-entries" class="space-y-4">
+                            </div>
+                    </div>
+
+                    <div class="mb-6 p-4 border border-gray-700 rounded-md bg-gray-800">
+                        <h4 class="text-lg font-semibold text-gray-300 mb-3">Skills (Comma-separated)</h4>
+                        <textarea id="skills-input" rows="2" placeholder="e.g., JavaScript, React, Data Analysis, Project Management" class="form-input"></textarea>
+                    </div>
+
+                    <div class="mb-6 p-4 border border-gray-700 rounded-md bg-gray-800">
+                        <h4 class="text-lg font-semibold text-gray-300 mb-3 flex justify-between items-center">
+                            Projects
+                            <button id="add-project-btn" class="text-indigo-400 hover:text-indigo-300 font-semibold text-sm">+ Add</button>
+                        </h4>
+                        <div id="project-entries" class="space-y-4">
+                            </div>
+                    </div>
+
+                    <div class="mb-6 p-4 border border-gray-700 rounded-md bg-gray-800">
+                        <h4 class="text-lg font-semibold text-gray-300 mb-3 flex justify-between items-center">
+                            Awards & Certifications
+                            <button id="add-award-btn" class="text-indigo-400 hover:text-indigo-300 font-semibold text-sm">+ Add</button>
+                        </h4>
+                        <div id="award-entries" class="space-y-4">
+                            </div>
+                    </div>
+
+                </div>
+
+                <div class="mb-8 p-4 border border-gray-700 rounded-md bg-gray-800">
+                    <h3 class="text-xl font-semibold mb-4 text-gray-200 text-left">Add New Section</h3>
+                    <button id="add-project-section-btn" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-md shadow-md transition-colors duration-200">
+                        Add Project Section
+                    </button>
+
+                    <div id="project-input-form" class="mt-6 hidden">
+                        <h4 class="text-lg font-semibold mb-3 text-gray-300">Add New Project:</h4>
+                        <div class="mb-3">
+                            <label for="project-title" class="block text-gray-400 font-medium mb-1 text-left">Project Title:</label>
+                            <input type="text" id="project-title" class="form-input" placeholder="e.g., Evexa Universal Converter">
+                        </div>
+                        <div class="mb-3">
+                            <label for="project-date" class="block text-gray-400 font-medium mb-1 text-left">Date (e.g., Jan 2023 - Present):</label>
+                            <input type="text" id="project-date" class="form-input" placeholder="e.g., Jan 2023 - Present">
+                        </div>
+                        <div class="mb-3">
+                            <label for="project-description" class="block text-gray-400 font-medium mb-1 text-left">Description:</label>
+                            <textarea id="project-description" class="form-input" rows="4" placeholder="Briefly describe your role, responsibilities, and achievements. Use bullet points for impact."></textarea>
+                        </div>
+                        <div class="mb-4">
+                            <label for="project-link" class="block text-gray-400 font-medium mb-1 text-left">Project Link (Optional):</label>
+                            <input type="url" id="project-link" class="form-input" placeholder="e.g., https://yourproject.com">
+                        </div>
+                        <button id="save-project-btn" class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-md shadow-md transition-colors duration-200 mr-2">
+                            Save Project
+                        </button>
+                        <button id="cancel-project-btn" class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-md shadow-colors duration-200">
+                            Cancel
+                        </button>
+                    </div>
+                </div>
+
+                <div class="mt-8">
+                    <h3 class="text-xl font-semibold mb-3 text-gray-300">Live Preview</h3>
+                    <div id="resume-preview-container" class="bg-gray-900 border border-gray-700 rounded-md shadow-lg" style="min-height: 400px; max-height: 800px;">
+                        <div id="resume-preview" class="resume-template modern">
+                            </div>
+                    </div>
+                </div>
+
+                <button id="generate-resume-pdf-btn" class="btn-primary w-full mt-8">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 13h6m-3-3v6m5 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                    Generate Resume PDF
+                </button>
+                <a id="download-resume-pdf-link" class="link-download hidden" download="my_resume.pdf">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l3-3m-3 3l-3-3m2-8h7a2 2 0 012 2v8a2 2 0 01-2 2h-7l-3 3v-3H4a2 2 0 01-2-2V6a2 2 0 012-2h7a2 2 0 012 2z"></path></svg>
+                    Download Resume PDF
+                </a>
+                <div id="loading-message-resume-pdf" class="message-box info hidden mt-4">
+                    <p>Generating PDF...</p>
+                </div>
+                <div id="status-message-resume-pdf" class="message-box hidden"></div>
+            </div>
+        </div>
+
+        <footer class="text-center text-gray-500 text-sm mt-8">
+            <p>&copy; 2025 Evexa Universal Converter. All rights reserved.</p>
+            <p>Powered by jsPDF, html2canvas, Sortable.js, and PDF.js</p>
+        </footer>
+    </div>
+
+   <script src="script.js"></script>
+</body>
+</html>
