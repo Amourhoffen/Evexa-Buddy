@@ -1,0 +1,612 @@
+
+        :root {
+            --primary-color: #6366f1; /* Indigo 500 - main accent */
+            --secondary-accent: #a78bfa; /* Violet 400 - secondary accent/glow */
+            --bg-dark: #1a202c; /* Dark charcoal */
+            --bg-card: #2d3748; /* Darker gray for cards */
+            --text-light: #e2e8f0; /* Light gray for general text */
+            --text-muted: #a0aec0; /* Muted gray for placeholders/secondary text */
+            --font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            font-family: var(--font-family);
+            background-color: var(--bg-dark);
+            color: var(--text-light);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 1.5rem;
+        }
+
+        .tab-button {
+            background-color: var(--bg-card);
+            color: var(--text-muted);
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 1px solid transparent; /* Subtle border */
+        }
+
+        .tab-button.active {
+            background: linear-gradient(90deg, var(--primary-color) 0%, var(--secondary-accent) 100%);
+            color: white;
+            box-shadow: 0 0 15px rgba(99, 102, 241, 0.6), 0 0 30px rgba(167, 139, 250, 0.4); /* Glowing effect */
+            border-color: var(--primary-color);
+        }
+
+        .tab-button:hover:not(.active) {
+            background-color: #3a445a; /* Slightly lighter on hover for inactive */
+            color: var(--text-light);
+            border-color: var(--primary-color);
+        }
+
+        .card {
+            background-color: var(--bg-card);
+            border-radius: 0.75rem;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3), 0 0 10px rgba(99, 102, 241, 0.1); /* Deeper shadow with subtle glow */
+            padding: 2rem;
+            margin-bottom: 2rem;
+            color: var(--text-light);
+            border: 1px solid #3a445a; /* Subtle card border */
+        }
+
+        /* General form input styling */
+        .form-input {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 1px solid #4a5568; /* Darker border for inputs */
+            border-radius: 0.5rem;
+            font-size: 1rem;
+            background-color: var(--bg-dark); /* Very dark background for inputs */
+            color: var(--text-light); /* Light text color */
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+        .form-input:focus {
+            border-color: var(--primary-color);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.5); /* Stronger focus glow */
+        }
+        .form-input::placeholder {
+            color: var(--text-muted); /* Lighter placeholder text */
+        }
+        textarea.form-input {
+            resize: vertical;
+        }
+        /* Specific style for form-textarea within the Text to PDF converter */
+        .form-textarea {
+            resize: vertical; /* Allow vertical resizing of the textarea */
+            min-height: 100px; /* Minimum height for the textarea */
+        }
+
+        /* Button Styling */
+        .btn-primary {
+            background: linear-gradient(90deg, var(--primary-color) 0%, var(--secondary-accent) 100%);
+            color: white;
+            padding: 0.75rem 2rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4); /* Stronger shadow */
+        }
+        .btn-primary:hover {
+            background: linear-gradient(90deg, #4f46e5 0%, #9068f0 100%); /* Slightly darker gradient on hover */
+            transform: translateY(-2px); /* More pronounced lift */
+            box-shadow: 0 6px 20px rgba(99, 102, 241, 0.6); /* Even stronger shadow */
+        }
+        .btn-primary:disabled {
+            background: #4a5568; /* Darker gray */
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+            color: #cbd5e0;
+        }
+        .btn-secondary {
+            background-color: #4a5568;
+            color: var(--text-light);
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            font-weight: 500;
+            transition: background-color 0.2s ease;
+            cursor: pointer;
+            border: none;
+        }
+        .btn-secondary:hover {
+            background-color: #6366f1;
+        }
+        .btn-clear {
+            background-color: #ef4444; /* Red 500 */
+            color: white;
+            padding: 0.6rem 1.2rem;
+            border-radius: 0.5rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            box-shadow: 0 2px 8px rgba(239, 68, 68, 0.3);
+        }
+        .btn-clear:hover {
+            background-color: #dc2626; /* Red 600 */
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.5);
+        }
+        .btn-clear:disabled {
+            background: #4a5568;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+            color: #cbd5e0;
+        }
+
+
+        /* Link Button Style (Download) */
+        .link-download {
+            background-color: #10b981; /* Emerald-500 */
+            color: white;
+            padding: 0.75rem 2rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-top: 1.5rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4); /* Emerald glow */
+        }
+        .link-download:hover {
+            background-color: #059669; /* Emerald-600 */
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(16, 185, 129, 0.6);
+        }
+
+        /* Image Converter Specific Styles */
+        .drop-area {
+            border: 2px dashed var(--primary-color); /* Dashed primary color border */
+            background-color: #262c38; /* Slightly lighter than card background */
+            border-radius: 0.75rem;
+            padding: 2rem;
+            margin-bottom: 1.5rem;
+            text-align: center;
+            cursor: pointer;
+            transition: background-color 0.3s ease, border-color 0.3s ease;
+        }
+        .drop-area.highlight {
+            background-color: #3a445a;
+            border-color: var(--secondary-accent);
+        }
+        .drop-area:hover {
+            background-color: #2d3748;
+        }
+        .image-preview-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 1rem;
+            margin-top: 1.5rem;
+            border: 1px solid #4a5568;
+            background-color: var(--bg-dark);
+            padding: 1rem;
+            border-radius: 0.75rem;
+            min-height: 150px;
+            align-items: flex-start;
+            justify-items: center;
+        }
+        .image-preview-item {
+            position: relative;
+            width: 120px;
+            height: 120px;
+            border: 1px solid #4a5568;
+            border-radius: 0.5rem;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: var(--bg-card);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            cursor: grab;
+            transition: transform 0.2s ease;
+        }
+        .image-preview-item:active {
+            cursor: grabbing;
+        }
+        .image-preview-item img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+        .image-preview-item .delete-btn {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background-color: rgba(239, 68, 68, 0.9);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            font-size: 0.8rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 10;
+            opacity: 0.8;
+            transition: opacity 0.2s;
+        }
+        .image-preview-item .delete-btn:hover {
+            opacity: 1;
+            background-color: #dc2626;
+        }
+
+        /* PDF to Image specific drop area */
+        .pdf-drop-area {
+            border: 2px dashed var(--primary-color);
+            background-color: #262c38;
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            text-align: center;
+            cursor: pointer;
+            transition: background-color 0.3s ease, border-color 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100px;
+        }
+        .pdf-drop-area.highlight {
+            background-color: #3a445a;
+            border-color: var(--secondary-accent);
+        }
+        .pdf-drop-area:hover {
+            background-color: #2d3748;
+        }
+        .pdf-drop-area .selected-file-name {
+            margin-top: 0.5rem;
+            font-size: 0.9rem;
+            color: var(--text-light);
+            font-weight: 500;
+        }
+
+
+        /* Message Box Styling */
+        .message-box {
+            padding: 1rem;
+            border-radius: 0.5rem;
+            margin-top: 1rem;
+            font-weight: 500;
+            text-align: left;
+            border: 1px solid transparent;
+        }
+        .message-box.info {
+            background-color: #34495e; /* Darker blue-gray */
+            color: var(--text-light);
+            border-color: #5dade2; /* Blue border */
+        }
+        .message-box.success {
+            background-color: #1a5242; /* Darker green */
+            color: var(--text-light);
+            border-color: #2ecc71; /* Green border */
+        }
+        .message-box.error {
+            background-color: #641e1e; /* Darker red */
+            color: var(--text-light);
+            border-color: #e74c3c; /* Red border */
+        }
+        .hidden {
+            display: none;
+        }
+
+        /* Resume Builder Specific Styles */
+        .template-card {
+            background-color: var(--bg-card);
+            color: var(--text-light);
+            padding: 1rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 80px;
+            border: 2px solid transparent;
+        }
+        .template-card.active {
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-accent));
+            border-color: var(--primary-color);
+            color: white;
+            box-shadow: 0 4px 10px rgba(99, 102, 241, 0.4);
+        }
+        .template-card:hover:not(.active) {
+            background-color: #3a445a;
+            color: var(--text-light);
+            border-color: var(--primary-color);
+        }
+
+        .section-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: var(--bg-dark);
+            border: 1px solid #4a5568;
+            padding: 0.75rem 1rem;
+            margin-bottom: 0.5rem;
+            border-radius: 0.5rem;
+            cursor: grab;
+            transition: background-color 0.2s ease;
+        }
+        .section-item:hover {
+            background-color: #2d3748;
+        }
+        .section-item:active {
+            cursor: grabbing;
+        }
+        .sortable-ghost {
+            opacity: 0.5;
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        /* Resume Preview Area */
+        #resume-preview-container {
+            border: 1px solid #4a5568;
+            background-color: var(--bg-dark);
+            min-height: 400px;
+            max-height: 80vh; /* Adjust max height for responsiveness */
+            overflow-y: auto;
+            border-radius: 0.75rem;
+            padding: 2rem;
+            color: #2d3748; /* Text color inside preview to contrast with dark background */
+        }
+
+        #resume-preview {
+            background-color: white; /* Actual resume background will be white */
+            padding: 30px; /* Internal padding for the resume content */
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            min-height: 800px; /* Simulate A4 height for preview */
+            max-width: 210mm; /* A4 width */
+            margin: auto;
+            box-sizing: border-box;
+            word-wrap: break-word;
+        }
+
+        /* Resume Template Styles */
+        /* Common styles for all templates */
+        .resume-template h1, .resume-template h2, .resume-template h3 {
+            color: var(--primary-color);
+            font-family: var(--font-family);
+            margin-bottom: 0.5rem;
+        }
+        .resume-template h1 { font-size: 2.2rem; margin-bottom: 0.25rem; }
+        .resume-template h2 { font-size: 1.5rem; margin-bottom: 0.75rem; border-bottom: 2px solid var(--primary-color); padding-bottom: 0.25rem; }
+        .resume-template h3 { font-size: 1.2rem; margin-bottom: 0.5rem; }
+        .resume-template p, .resume-template ul, .resume-template li {
+            font-family: var(--font-family);
+            font-size: 0.95rem;
+            line-height: 1.5;
+            color: var(--text-color);
+        }
+        .resume-template ul {
+            list-style-type: var(--bullet-type, disc); /* Apply variable, with disc as default */
+            padding-left: 20px;
+            margin-bottom: 1rem;
+            line-height: var(--list-line-height, 1.5); /* Apply variable, with 1.5 as default */
+        }
+        .resume-template ul.skills-list { display: flex; flex-wrap: wrap; list-style: none; padding-left: 0;}
+        .resume-template ul.skills-list li { margin-right: 10px; margin-bottom: 5px; background-color: #e2e8f0; padding: 3px 8px; border-radius: 5px; font-size: 0.85rem;}
+
+        /* Modern Template */
+        .resume-template.modern .header-section {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 20px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .resume-template.modern .header-section h1 {
+            color: white;
+            margin-bottom: 5px;
+            font-size: 2.5rem;
+        }
+        .resume-template.modern .header-section p {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 1.1rem;
+        }
+        .resume-template.modern .contact-info span {
+            margin: 0 8px;
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 0.9rem;
+        }
+        .resume-template.modern h2 {
+            text-align: left;
+            border-bottom-color: var(--primary-color);
+            margin-top: 1.5rem;
+            font-size: 1.6rem;
+        }
+        .resume-template.modern .section-content h3 {
+            color: var(--secondary-text-color);
+            margin-top: 1rem;
+            margin-bottom: 0.25rem;
+            font-weight: 600;
+        }
+        .resume-template.modern .meta-info {
+            font-size: 0.9rem;
+            color: #666;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        /* Classic Template */
+        .resume-template.classic .header-section {
+            text-align: center;
+            margin-bottom: 20px;
+            border-bottom: 3px double var(--primary-color);
+            padding-bottom: 10px;
+        }
+        .resume-template.classic .header-section h1 {
+            color: #2d3748;
+            font-size: 2.8rem;
+            margin-bottom: 5px;
+        }
+        .resume-template.classic .header-section p {
+            color: #4a5568;
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+        }
+        .resume-template.classic .contact-info span {
+            margin: 0 8px;
+            color: #4a5568;
+            font-size: 0.95rem;
+        }
+        .resume-template.classic h2 {
+            text-align: left;
+            border-bottom-color: #ccc;
+            margin-top: 1.5rem;
+            font-size: 1.6rem;
+            color: #2d3748;
+        }
+        .resume-template.classic .section-content h3 {
+            color: #2d3748;
+            margin-top: 1rem;
+            margin-bottom: 0.25rem;
+            font-weight: 600;
+        }
+        .resume-template.classic .meta-info {
+            font-size: 0.9rem;
+            color: #666;
+            margin-bottom: 0.5rem;
+            font-style: italic;
+        }
+
+        /* Minimal Template */
+        .resume-template.minimal .header-section {
+            text-align: left;
+            margin-bottom: 25px;
+        }
+        .resume-template.minimal .header-section h1 {
+            color: #2d3748;
+            font-size: 2.8rem;
+            margin-bottom: 5px;
+            border-left: 5px solid var(--primary-color);
+            padding-left: 10px;
+            display: inline-block;
+        }
+        .resume-template.minimal .header-section p {
+            color: #4a5568;
+            font-size: 1.2rem;
+            margin-top: 5px;
+            margin-left: 15px; /* Align with h1 padding */
+        }
+        .resume-template.minimal .contact-info {
+            margin-top: 10px;
+            margin-left: 15px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px 20px;
+        }
+        .resume-template.minimal .contact-info span {
+            color: #4a5568;
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+        }
+        .resume-template.minimal .contact-info span svg {
+            margin-right: 5px;
+            width: 16px;
+            height: 16px;
+            fill: var(--primary-color);
+        }
+        .resume-template.minimal h2 {
+            text-align: left;
+            border-bottom: none;
+            position: relative;
+            margin-top: 1.5rem;
+            font-size: 1.6rem;
+            color: #2d3748;
+        }
+        .resume-template.minimal h2::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: -5px;
+            width: 50px;
+            height: 2px;
+            background-color: var(--primary-color);
+        }
+        .resume-template.minimal .section-content h3 {
+            color: var(--primary-color);
+            margin-top: 1rem;
+            margin-bottom: 0.25rem;
+            font-weight: 600;
+        }
+        .resume-template.minimal .meta-info {
+            font-size: 0.9rem;
+            color: #666;
+            margin-bottom: 0.5rem;
+        }
+        .resume-template.minimal ul {
+            list-style-type: var(--bullet-type, circle); /* Minimal template default is circle, so we set it here */
+        }
+
+        /* New styles for Projects section */
+        .resume-section.projects-section {
+            margin-bottom: 25px; /* Spacing below the entire projects section */
+        }
+
+        .project-item {
+            margin-bottom: 15px; /* Spacing between individual projects */
+        }
+
+        .project-item h4 {
+            font-size: 1.15rem; /* Project title size */
+            font-weight: 600;
+            color: var(--primary-color); /* Use primary color if defined */
+            margin-bottom: 5px;
+        }
+
+        .project-item .project-date {
+            font-size: 0.9rem;
+            color: #b0b0b0;
+            margin-bottom: 5px;
+        }
+
+        .project-item .project-description {
+            font-size: 1rem;
+            color: #e0e0e0;
+            line-height: var(--list-line-height); /* Use global list line height */
+        }
+
+        .project-item .project-description ul {
+            list-style-type: var(--bullet-type); /* Use global bullet type */
+            padding-left: 20px;
+            margin-top: 5px;
+            margin-bottom: 0;
+        }
+
+        .project-item .project-link {
+            font-size: 0.9rem;
+            color: #7dd3fc; /* A link color */
+            text-decoration: underline;
+            margin-top: 5px;
+            display: block;
+        }
+    
